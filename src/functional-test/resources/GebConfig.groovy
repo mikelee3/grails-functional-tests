@@ -1,6 +1,14 @@
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.htmlunit.HtmlUnitDriver
+
+driver = {
+    HtmlUnitDriver driverInstance = new HtmlUnitDriver()
+    driverInstance.javascriptEnabled = true
+    return driverInstance
+}
+
 
 environments {
 

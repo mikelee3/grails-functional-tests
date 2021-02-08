@@ -25,11 +25,31 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
+sourceSets {
+    functionalTest {
+        groovy.srcDir "${projectDir}/src/functional-test/groovy"
+        resources.srcDir "${projectDir}/src/functional-test/resources"
+//        compileClasspath += main.output + test.output
+//        runtimeClasspath += main.output + test.output
+        compileClasspath += main.output + integrationTest.output
+        runtimeClasspath += main.output + integrationTest.output
+    }
+}
+
 configurations {
     developmentOnly
     runtimeClasspath {
         extendsFrom developmentOnly
     }
+//    functionalTestImplementation.extendsFrom testImplementation
+//    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
+    functionalTestImplementation.extendsFrom integrationTestImplementation
+    functionalTestRuntimeOnly.extendsFrom integrationTestRuntimeOnly
+}
+
+task functionalTest(type: Test) {
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
 }
 
 dependencies {
@@ -66,12 +86,16 @@ dependencies {
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.mockito:mockito-core"
     testCompile "org.grails:grails-web-testing-support"
-    testCompile "org.grails.plugins:geb"
-    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.14.0"
-    testCompile "org.seleniumhq.selenium:selenium-api:3.14.0"
-    testCompile "org.seleniumhq.selenium:selenium-support:3.14.0"
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
+
+    functionalTestCompile "org.gebish:geb-spock:4.0"
+    functionalTestCompile "org.seleniumhq.selenium:selenium-remote-driver:3.141.59"
+    functionalTestCompile "org.seleniumhq.selenium:selenium-api:3.141.59"
+    functionalTestCompile "org.seleniumhq.selenium:selenium-support:3.141.59"
+    functionalTestCompile "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
+    functionalTestCompile "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
+
+    functionalTestCompile "org.seleniumhq.selenium:htmlunit-driver:2.46.0"
+    functionalTestCompile "net.sourceforge.htmlunit:htmlunit:2.46.0"
 }
 
 bootRun {
@@ -99,9 +123,9 @@ webdriverBinaries {
 
 tasks.withType(Test) {
     systemProperty "geb.env", System.getProperty('geb.env')
-    systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
-    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
-    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
+    systemProperty "geb.build.reportsDir", reporting.file("geb/functionalTest")
+//    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
+//    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
 }
 
 
