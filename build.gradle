@@ -25,18 +25,6 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-eclipse {
-    // plusConfigurations may need to be dealt with
-    classpath {
-        file {
-            whenMerged { classpath ->
-                classpath.entries.removeAll { e ->
-                    e.path.contains('grails-app/conf') || e.path.contains('gsp-class')
-                 }
-            }
-        }
-    }
-}
 
 sourceSets {
     functionalTest {
@@ -56,6 +44,7 @@ configurations {
     }
 //    functionalTestImplementation.extendsFrom testImplementation
 //    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
+    functionalTestComile.extendsFrom integrationTestCompile
     functionalTestImplementation.extendsFrom integrationTestImplementation
     functionalTestRuntimeOnly.extendsFrom integrationTestRuntimeOnly
 }
@@ -145,4 +134,17 @@ tasks.withType(Test) {
 assets {
     minifyJs = true
     minifyCss = true
+}
+
+eclipse {
+    classpath {
+        plusConfigurations.add configurations.functionalTestCompile
+        file {
+            whenMerged { classpath ->
+                classpath.entries.removeAll { e ->
+                    e.path.contains('grails-app/conf') || e.path.contains('gsp-class')
+                }
+            }
+        }
+    }
 }
