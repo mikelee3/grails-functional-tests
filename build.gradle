@@ -25,6 +25,19 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
+eclipse {
+    // plusConfigurations may need to be dealt with
+    classpath {
+        file {
+            whenMerged { classpath ->
+                classpath.entries.removeAll { e ->
+                    e.path.contains('grails-app/conf') || e.path.contains('gsp-class')
+                 }
+            }
+        }
+    }
+}
+
 sourceSets {
     functionalTest {
         groovy.srcDir "${projectDir}/src/functional-test/groovy"
