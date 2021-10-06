@@ -44,7 +44,6 @@ configurations {
     }
 //    functionalTestImplementation.extendsFrom testImplementation
 //    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
-    functionalTestComile.extendsFrom integrationTestCompile
     functionalTestImplementation.extendsFrom integrationTestImplementation
     functionalTestRuntimeOnly.extendsFrom integrationTestRuntimeOnly
 }
